@@ -7,7 +7,7 @@ Multi-agent review setup for Claude Code. One command runs implementation + para
 Run this in any project root:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/YOUR_USERNAME/claude-agents/main/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/ahoa/claude-agents/main/install.sh | bash
 ```
 
 ## Usage
@@ -37,9 +37,9 @@ Phase 4  →  fix all CRITICAL/Must Fix → write summary → done
 
 ## Agents
 
-| Agent | Focuses on |
-|---|---|
-| `security-reviewer` | Secrets, injection, auth bypasses, CVEs |
-| `architecture-reviewer` | SOLID, God classes, coupling, layer violations |
-| `test-reviewer` | Untested paths, happy-path-only tests, missing edge cases |
-| `docs-reviewer` | Missing Javadoc, README gaps, undocumented endpoints |
+| Agent                   | Focuses on                                                |
+|-------------------------|-----------------------------------------------------------|
+| `security-reviewer`     | Secrets, injection, auth bypasses, CVEs                   |
+| `architecture-reviewer` | SOLID, God classes, coupling, layer violations            |
+| `test-reviewer`         | Untested paths, happy-path-only tests, missing edge cases |
+| `docs-reviewer`         | Missing Javadoc, README gaps, undocumented endpoints      |
