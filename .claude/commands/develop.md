@@ -76,21 +76,32 @@ Story to develop: $ARGUMENTS
 
 ---
 
+
 ## Phase 4 — Fix & Synthesize
 
 12. Read all 4 review stories. Fix everything marked CRITICAL or MUST FIX immediately.
 
 13. Use `update_story` on the original story to append `## Review Summary`:
     - CRITICAL/MUST FIX items and whether each was fixed
-    - Remaining items (SHOULD FIX, NICE TO HAVE) as follow-up Tasks `- [ ]`
     - Links to all 4 review story IDs
+    - Remove `## Implementation Notes` section (no longer needed after review)
 
-14. Use `change_status` on the original story → "done".
+14. If any SHOULD FIX or NICE TO HAVE items remain across all 4 review stories,
+    use `create_story` to create a single follow-up story:
+    - Title: `# Feature: [FOLLOWUP] <original story title> — <today's date>`
+    - Tag: "followup"
+    - `## Details`: brief summary of what this follow-up covers
+    - `## Tasks`: one `- [ ]` per remaining item, prefixed with its category:
+      e.g. `- [ ] ARCH: Extract PaymentService from UserController`
+      e.g. `- [ ] TEST: Add edge cases for null input in InvoiceCalculator`
+    If there are no remaining items, skip this step.
 
-15. Print final console summary:
+15. Use `change_status` on the original story → "done".
+
+16. Print final console summary:
     ```
     ✅ Story [ID/slug] complete
     📋 Reviews: #X (security) #X (arch) #X (testing) #X (docs)
     🔴 Critical issues fixed: N
-    🟡 Remaining follow-ups: N
+    🟡 Follow-up story created: #ID (N items) / none
     ```
