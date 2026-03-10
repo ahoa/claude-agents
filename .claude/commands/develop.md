@@ -44,64 +44,72 @@ Story to develop: $ARGUMENTS
    - Do not write code that isn't required by a failing test
    - Refactor after green — clean up without breaking tests (Boy Scout Rule)
 
-8. Use `update_story` to append `## Implementation Notes` with:
-   - What was built and key decisions made
-   - **Exact list of files created/modified** (passed to review agents)
-   - Update `## Tasks` checkboxes to `- [x]` as each task is completed
+8. Note the exact list of files created/modified — passed to review agents next.
+   Update `## Tasks` checkboxes to `- [x]` as each task is completed.
 
 ---
 
 ## Phase 3 — Parallel Review
 
-9. Use `create_story` for each review role with this title format:
-   `# Feature: [REVIEW][role] <original story title> — <today's date>`
-   Add tag "review-batch". Note each returned ID.
-   Roles: security, architecture, testing, docs
+9. Spawn all 4 Tasks simultaneously — agents are fully independent and must run in parallel.
+   Pass each agent the list of files from Phase 2.
 
-10. Spawn all 4 Tasks simultaneously — agents are fully independent and must run in parallel.
+   - Task 1: agent `security-reviewer`
+     > Analyze these files: [MODIFIED_FILES]. Return your findings as structured text.
 
-    - Task 1: agent `security-reviewer`
-      > Read review story [SECURITY_ID]. Analyze these files: [MODIFIED_FILES]. Write findings to story [SECURITY_ID].
+   - Task 2: agent `architecture-reviewer`
+     > Analyze these files: [MODIFIED_FILES]. Return your findings as structured text.
 
-    - Task 2: agent `architecture-reviewer`
-      > Read review story [ARCH_ID]. Analyze these files: [MODIFIED_FILES]. Write findings to story [ARCH_ID].
+   - Task 3: agent `test-reviewer`
+     > Analyze these files: [MODIFIED_FILES] and their test counterparts. Return your findings as structured text.
 
-    - Task 3: agent `test-reviewer`
-      > Read review story [TEST_ID]. Analyze these files: [MODIFIED_FILES] and their test counterparts. Write findings to story [TEST_ID].
+   - Task 4: agent `docs-reviewer`
+     > Analyze these files: [MODIFIED_FILES]. Return your findings as structured text.
 
-    - Task 4: agent `docs-reviewer`
-      > Read review story [DOCS_ID]. Analyze these files: [MODIFIED_FILES]. Write findings to story [DOCS_ID].
-
-11. Wait for all 4 tasks to complete (all statuses → "done").
+10. Wait for all 4 tasks to complete and collect their output.
 
 ---
 
-
 ## Phase 4 — Fix & Synthesize
 
-12. Read all 4 review stories. Fix everything marked CRITICAL or MUST FIX immediately.
+11. Fix everything marked CRITICAL or MUST FIX immediately.
 
-13. Use `update_story` on the original story to append `## Review Summary`:
-    - CRITICAL/MUST FIX items and whether each was fixed
-    - Links to all 4 review story IDs
-    - Remove `## Implementation Notes` section (no longer needed after review)
+    with all 4 agent outputs as a compact summary:
 
-14. If any SHOULD FIX or NICE TO HAVE items remain across all 4 review stories,
-    use `create_story` to create a single follow-up story:
+    ```
+    ## Review Summary
+    No CRITICAL issues. / Fixed inline: [list what was fixed]
+    Follow-up: #[slug] / none
+
+    | | Findings |
+    |---|---|
+    | Security | [one line: e.g. 3 MEDIUM — no rate limiting, CSRF disabled] |
+    | Architecture | [one line: e.g. 2 MUST FIX — AuthController bloat, god class in McpService] |
+    | Testing | [one line: e.g. missing controller tests, no integration tests] |
+    | Docs | [one line: e.g. no README, endpoints undocumented] |
+    ```
+
+    Keep each row to one line. Omit rows with no findings.
+
+13. If any SHOULD FIX, NICE TO HAVE, IMPORTANT, or MINOR items remain,
+    use `create_story` for a single follow-up:
     - Title: `# Feature: [FOLLOWUP] <original story title> — <today's date>`
     - Tag: "followup"
     - `## Details`: brief summary of what this follow-up covers
-    - `## Tasks`: one `- [ ]` per remaining item, prefixed with its category:
+    - `## Tasks`: one `- [ ]` per remaining item prefixed with category:
       e.g. `- [ ] ARCH: Extract PaymentService from UserController`
       e.g. `- [ ] TEST: Add edge cases for null input in InvoiceCalculator`
-    If there are no remaining items, skip this step.
+    - Append the full detailed findings from all agents as custom sections:
+      `## Security Findings`, `## Architecture Findings`, `## Testing Findings`, `## Docs Findings`
 
-15. Use `change_status` on the original story → "done".
+    If no remaining items, append the full detailed findings directly to the original story instead:
+      `## Security Findings`, `## Architecture Findings`, `## Testing Findings`, `## Docs Findings`
 
-16. Print final console summary:
+14. Use `change_status` on the original story → "done".
+
+15. Print final console summary:
     ```
     ✅ Story [ID/slug] complete
-    📋 Reviews: #X (security) #X (arch) #X (testing) #X (docs)
     🔴 Critical issues fixed: N
     🟡 Follow-up story created: #ID (N items) / none
     ```

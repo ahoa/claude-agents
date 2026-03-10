@@ -6,54 +6,71 @@ Story to review: $ARGUMENTS
 
 ## Step 1 — Read Story
 
-Use `read_story` with "$ARGUMENTS". Identify which files were modified/created (check "Implementation Notes" section if present, otherwise ask the user which paths to scan).
+Use `read_story` with "$ARGUMENTS". Find which files were modified in the `## Implementation Notes` section.
+If not present, ask the user which paths to scan before continuing.
 
 ---
 
-## Step 2 — Create Review Stories
+## Step 2 — Spawn Parallel Agents
 
-Use `create_story` for each role. Title format: "[REVIEW][role] <original title> — <today's date>". Tag: "review-batch".
-
-Roles: security, architecture, testing, docs. Note each returned ID.
-
----
-
-## Step 3 — Spawn Parallel Agents
-
-Spawn 4 parallel Tasks using these named agents:
+Spawn all 4 Tasks simultaneously — agents are fully independent and must run in parallel.
 
 - Task 1: agent `security-reviewer`
-  > Read review story [SECURITY_ID]. Analyze these files: [PATHS]. Write findings to story [SECURITY_ID].
+  > Analyze these files: [PATHS]. Return your findings as structured text.
 
 - Task 2: agent `architecture-reviewer`
-  > Read review story [ARCH_ID]. Analyze these files: [PATHS]. Write findings to story [ARCH_ID].
+  > Analyze these files: [PATHS]. Return your findings as structured text.
 
 - Task 3: agent `test-reviewer`
-  > Read review story [TEST_ID]. Analyze these files: [PATHS] and their test counterparts. Write findings to story [TEST_ID].
+  > Analyze these files: [PATHS] and their test counterparts. Return your findings as structured text.
 
 - Task 4: agent `docs-reviewer`
-  > Read review story [DOCS_ID]. Analyze these files: [PATHS]. Write findings to story [DOCS_ID].
+  > Analyze these files: [PATHS]. Return your findings as structured text.
 
-Wait for all 4 to complete.
+Wait for all 4 to complete and collect their output.
 
 ---
 
-## Step 4 — Summarize
+## Step 3 — Synthesize
 
-Read all 4 review stories. Use `update_story` on the original story to append:
+Use `update_story` ONCE on the original story to append `## Review Summary`
+with all 4 agent outputs combined:
 
 ```
-## Review Findings Summary
-- Security: #ID — N critical, N high, N medium
-- Architecture: #ID — N must fix, N should fix
-- Testing: #ID — N untested paths, N weak tests
-- Docs: #ID — N blocking, N important
-```
+## Review Summary
 
-Print final summary to console:
+### Security
+[security-reviewer output]
+
+### Architecture
+[architecture-reviewer output]
+with all 4 agent outputs as a compact summary:
+
 ```
-✅ Review complete for story [ID/slug]
-📋 Review stories: #X (security) #X (arch) #X (testing) #X (docs)
+## Review Summary
+Follow-up: #[slug] / none
+
+|              | Findings           |
+|--------------|--------------------|
+| Security     | [one line summary] |
+| Architecture | [one line summary] |
+| Testing      | [one line summary] |
+| Docs         | [one line summary] |
+
+If any SHOULD FIX, NICE TO HAVE, IMPORTANT, or MINOR items exist,
+use `create_story` for a follow-up:
+- Title: `# Feature: [FOLLOWUP] <original story title> — <today's date>`
+- Tag: "followup"
+- `## Details`: brief summary
+- `## Tasks`: one `- [ ]` per item prefixed with category (ARCH/TEST/SEC/DOCS)
+- Append full detailed findings as: `## Security Findings`, `## Architecture Findings`, `## Testing Findings`, `## Docs Findings`
+
+If no remaining items, append the full detailed findings directly to the original story instead:
+  `## Security Findings`, `## Architecture Findings`, `## Testing Findings`, `## Docs Findings`
+
+Print final summary:
+```
+✅ Review complete for [ID/slug]
 🔴 Items needing immediate attention: N
-🟡 Follow-up items: N
+🟡 Follow-up story created: #ID (N items) / none
 ```
