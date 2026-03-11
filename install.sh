@@ -16,10 +16,14 @@ curl -fsSL "$REPO/.claude/commands/review.md"              -o .claude/commands/r
 curl -fsSL "$REPO/.claude/agents-version"                  -o .claude/agents-version
 
 if [ -f "CLAUDE.md" ]; then
-  echo "" >> CLAUDE.md
-  echo "---" >> CLAUDE.md
-  curl -fsSL "$REPO/CLAUDE.md" >> CLAUDE.md
-  echo "✅ Appended agent config to existing CLAUDE.md"
+  if grep -q "## Clean Code Conventions" CLAUDE.md; then
+    echo "✅ CLAUDE.md already contains agent config, skipping"
+  else
+    echo "" >> CLAUDE.md
+    echo "---" >> CLAUDE.md
+    curl -fsSL "$REPO/CLAUDE.md" >> CLAUDE.md
+    echo "✅ Appended agent config to existing CLAUDE.md"
+  fi
 else
   curl -fsSL "$REPO/CLAUDE.md" -o CLAUDE.md
   echo "✅ Created CLAUDE.md"
