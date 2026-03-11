@@ -7,7 +7,7 @@ SETTINGS=".claude/settings.json"
 VERSION_FILE=".claude/agents-version"
 
 # Check if update is needed
-REMOTE_VERSION=$(curl -fsSL "$REPO/.claude/agents-version" 2>/dev/null || echo "unknown")
+REMOTE_VERSION=$(curl -fsSL "https://api.github.com/repos/ahoa/claude-agents/commits/master" | python3 -c "import json,sys; print(json.load(sys.stdin)['sha'][:7])")
 LOCAL_VERSION=$(cat "$VERSION_FILE" 2>/dev/null || echo "none")
 
 if [ "$REMOTE_VERSION" = "$LOCAL_VERSION" ]; then
