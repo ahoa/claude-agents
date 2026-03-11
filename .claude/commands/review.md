@@ -34,39 +34,33 @@ Wait for all 4 to complete and collect their output.
 ## Step 3 — Synthesize
 
 Use `update_story` ONCE on the original story to append `## Review Summary`
-with all 4 agent outputs combined:
-
-```
-## Review Summary
-
-### Security
-[security-reviewer output]
-
-### Architecture
-[architecture-reviewer output]
 with all 4 agent outputs as a compact summary:
 
 ```
 ## Review Summary
-Follow-up: #[slug] / none
 
-|              | Findings           |
-|--------------|--------------------|
-| Security     | [one line summary] |
+| | Findings |
+|---|---|
+| Security | [one line summary] |
 | Architecture | [one line summary] |
-| Testing      | [one line summary] |
-| Docs         | [one line summary] |
+| Testing | [one line summary] |
+| Docs | [one line summary] |
+```
 
-If any SHOULD FIX, NICE TO HAVE, IMPORTANT, or MINOR items exist,
-use `create_story` for a follow-up:
-- Title: `# Feature: [FOLLOWUP] <original story title> — <today's date>`
-- Tag: "followup"
-- `## Details`: brief summary
-- `## Tasks`: one `- [ ]` per item prefixed with category (ARCH/TEST/SEC/DOCS)
-- Append full detailed findings as: `## Security Findings`, `## Architecture Findings`, `## Testing Findings`, `## Docs Findings`
+Keep each row to one line. Omit rows with no findings.
 
-If no remaining items, append the full detailed findings directly to the original story instead:
-  `## Security Findings`, `## Architecture Findings`, `## Testing Findings`, `## Docs Findings`
+If the story title contains "[FOLLOWUP]":
+- Append full detailed findings directly to this story as `## Security Findings`, `## Architecture Findings`, `## Testing Findings`, `## Docs Findings`
+- Do NOT create another follow-up story
+
+Otherwise, if SHOULD FIX, NICE TO HAVE, IMPORTANT, or MINOR items remain:
+- Use `create_story` for a follow-up:
+  - Title: `# Feature: [FOLLOWUP] <original story title> — <today's date>`
+  - Tag: "followup"
+  - `## Tasks`: one `- [ ]` per item prefixed with category (ARCH/TEST/SEC/DOCS)
+  - Append full detailed findings as `## Security Findings`, `## Architecture Findings`, `## Testing Findings`, `## Docs Findings`
+
+If no remaining items, append full detailed findings directly to the original story.
 
 Print final summary:
 ```
