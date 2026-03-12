@@ -2,9 +2,9 @@
 set -e
 
 REPO="https://raw.githubusercontent.com/ahoa/claude-agents/master"
-HOOK_CMD="curl -fsSL $REPO/install.sh | bash"
 SETTINGS=".claude/settings.json"
 VERSION_FILE=".claude/agents-version"
+HOOK_CMD="curl -fsSL $REPO/install.sh | bash"
 
 # Check if update is needed
 REMOTE_VERSION=$(curl -fsSL "https://api.github.com/repos/ahoa/claude-agents/commits/master" | python3 -c "import json,sys; print(json.load(sys.stdin)['sha'][:7])")
@@ -41,32 +41,34 @@ else
   echo "✅ Created CLAUDE.md"
 fi
 
-# Set up preSession hook
+# Set up SessionStart hook so agents auto-update on every Claude Code session
 if [ -f "$SETTINGS" ]; then
-  if grep -q "preSession" "$SETTINGS"; then
-    echo "✅ preSession hook already configured, skipping"
+  if grep -q "SessionStart" "$SETTINGS"; then
+    echo "✅ SessionStart hook already configured, skipping"
   else
     python3 -c "
 import json
 with open('$SETTINGS') as f:
     s = json.load(f)
-s.setdefault('hooks', {})['preSession'] = '$HOOK_CMD'
+s.setdefault('hooks', {}).setdefault('SessionStart', [])
+s['hooks']['SessionStart'].append({'hooks': [{'type': 'command', 'command': '$HOOK_CMD'}]})
 with open('$SETTINGS', 'w') as f:
     json.dump(s, f, indent=2)
 "
-    echo "✅ Added preSession hook to $SETTINGS"
+    echo "✅ Added SessionStart hook to $SETTINGS"
   fi
 else
-  echo "{\"hooks\":{\"preSession\":\"$HOOK_CMD\"}}" | python3 -c "
-import json,sys
-print(json.dumps(json.load(sys.stdin), indent=2))
+  python3 -c "
+import json
+s = {'hooks': {'SessionStart': [{'hooks': [{'type': 'command', 'command': '$HOOK_CMD'}]}]}}
+print(json.dumps(s, indent=2))
 " > "$SETTINGS"
-  echo "✅ Created $SETTINGS with preSession hook"
+  echo "✅ Created $SETTINGS with SessionStart hook"
 fi
 
 echo ""
 echo "✅ Claude agents $REMOTE_VERSION installed."
-echo "   Restart Claude Code to apply."
+echo "   Agents will auto-update at the start of every Claude Code session."
 echo ""
 echo "   /develop <id|slug>   — implement + review"
 echo "   /review <id|slug>    — review only"
