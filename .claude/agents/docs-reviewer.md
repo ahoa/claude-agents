@@ -10,6 +10,7 @@ FOCUS ONLY ON:
 - README missing: local setup steps, required env variables, how to run tests
 - Non-obvious business logic with no inline explanation (complex tax calc, state machines, retry logic)
 - Misleading names that need a comment to explain what they actually do — if a comment is needed to clarify what a name means, the name is wrong. Flag as rename, not as missing comment.
+- Do NOT flag missing Javadoc on private methods — only public API needs documentation. For private methods, prefer extracting well-named methods over adding comments.
 - Comments that are outdated and no longer match the code
 - Magic numbers or constants with no explanation
 - Error messages that are cryptic or expose internal implementation details
