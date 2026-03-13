@@ -4,7 +4,17 @@ Story/feature to test: $ARGUMENTS
 
 ---
 
-## Step 0 — Bootstrap (only if Playwright is not yet configured)
+## Step 0 — Applicability check
+
+Check CLAUDE.md and the project structure to determine if this is a web project (has a frontend with HTML/browser UI).
+
+**If NOT a web project** (e.g. CLI tool, library, pure backend API without browser UI):
+- Skip this entire skill. Tell the user: "This project has no browser frontend — `/e2e-test` is for web projects. Use unit/integration tests instead."
+- Do NOT install Playwright or create docker-compose.test.yml.
+
+---
+
+## Step 0b — Bootstrap (only if Playwright is not yet configured)
 
 Check if `frontend/playwright.config.js` (or `playwright.config.js` / `playwright.config.ts` in the project root) exists.
 
