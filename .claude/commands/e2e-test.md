@@ -59,11 +59,18 @@ Read existing E2E tests in `e2e/` to understand patterns and helpers, then write
 
 ## Step 3 — Run and verify
 
-```
-cd frontend && npx playwright test <test-file>
-```
+Before running tests, ensure the test backend is up:
 
-The test backend must be running (`docker compose -f docker-compose.test.yml up -d`).
+1. Check if `docker-compose.test.yml` exists. If not, create it (see Step 0.3).
+2. Start the test environment:
+   ```
+   docker compose -f docker-compose.test.yml up --build -d
+   ```
+3. Wait for backend-test to be healthy (check `docker compose -f docker-compose.test.yml logs backend-test` for startup confirmation).
+4. Run tests:
+   ```
+   cd frontend && npx playwright test <test-file>
+   ```
 
 ## Step 4 — Update story
 
