@@ -111,7 +111,7 @@ Run E2E tests. If tests fail, read the screenshot from the test-results director
    ```
    npx playwright show-report --host localhost --port 9323 &
    ```
-   Then tell the user: **http://localhost:9323**
+   Then tell the user: **http://localhost:9323** (N tests passed)
 
 ## Step 6 — Update story
 
