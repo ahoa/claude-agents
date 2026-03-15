@@ -69,6 +69,7 @@ Skip this phase if the story is backend-only (no UI changes) or the project has 
 ## Phase 3 — Parallel Review
 
 15. **Triage before review.** If ALL modified files are CSS-only, Tailwind class changes, or SVG icon components — skip the full review. Instead, append a short `## Review Summary` noting "Trivial/styling-only change — review skipped" and proceed to Phase 4 step 21.
+    ⚠️ **This triage applies ONLY to reviews.** It does NOT apply to Phase 2d (E2E tests). If the story has UI changes, E2E tests must always be written regardless of how trivial the change appears.
 
 16. Spawn all 4 Tasks simultaneously — agents are fully independent and must run in parallel.
     Pass each agent the list of files from Phase 2 (or ask the user which files to review if this is a [FOLLOWUP] story).
