@@ -91,26 +91,9 @@ Skip this phase if the story is backend-only (no UI changes) or the project has 
 
 ## Phase 4 — Fix & Synthesize
 
-18. Fix everything marked CRITICAL or MUST FIX immediately.
+18. Fix everything marked CRITICAL or MUST FIX immediately. Do NOT write review findings into the story — stories are for the user, not for internal review data.
 
-19. Use `update_story` ONCE on the original story to append `## Review Summary`
-    with all 4 agent outputs as a compact summary:
-
-    ```
-    ## Review Summary
-    No CRITICAL issues. / Fixed inline: [list what was fixed]
-
-    | | Findings |
-    |---|---|
-    | Security | [one line: e.g. 3 MEDIUM — no rate limiting, CSRF disabled] |
-    | Architecture | [one line: e.g. 2 MUST FIX — AuthController bloat, god class in McpService] |
-    | Testing | [one line: e.g. missing controller tests, no integration tests] |
-    | Docs | [one line: e.g. no README, endpoints undocumented] |
-    ```
-
-    Keep each row to one line. Omit rows with no findings.
-
-20. If the story title contains "[FOLLOWUP]":
+19. If the story title contains "[FOLLOWUP]":
     - Do NOT create another follow-up story. Ever.
 
     Otherwise, if CRITICAL, MUST FIX, SHOULD FIX, or IMPORTANT items remain (exclude NICE TO HAVE, MINOR, and LOW):
@@ -121,9 +104,9 @@ Skip this phase if the story is backend-only (no UI changes) or the project has 
       - Only include CRITICAL, MUST FIX, SHOULD FIX, and IMPORTANT items as tasks
       - Keep it minimal — task checklist only, no detailed findings sections
 
-21. Use `change_status` on the original story → "done".
+20. Use `change_status` on the original story → "done".
 
-22. Print final console summary:
+21. Print final console summary:
     ```
     ✅ Story [ID/slug] complete
     🔴 Critical issues fixed: N
