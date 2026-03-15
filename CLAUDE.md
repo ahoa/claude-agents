@@ -16,6 +16,7 @@
 - **Stories must be minimally testable units.** Never create a single story that spans DB migration + new service + UI changes for multiple concepts.
 - Split large features into dependent stories with clear ordering. Each story should be independently deployable and testable.
 - When creating stories via `create_story`, check if the scope covers more than one vertical slice. If it does, split and note dependencies.
+- **Group related stories with a label.** When splitting a feature into multiple stories, apply a shared label (e.g. the feature name) to all of them. If `create_story` supports labels, use it. Otherwise, note the intended label in each story description so it can be applied manually.
 
 ## Review Scope Rules
 - **Only review code written/modified in the current story.** Do not flag pre-existing issues in files that were only touched for minor edits (imports, signature changes).
