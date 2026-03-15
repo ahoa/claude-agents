@@ -94,6 +94,8 @@ Skip this phase if the story is backend-only (no UI changes) or the project has 
 
 18. Fix everything marked CRITICAL or MUST FIX immediately. Do NOT write review findings into the story — stories are for the user, not for internal review data.
 
+18b. **Re-run E2E tests after fixes.** If any code was changed in step 18, re-run ALL E2E tests to verify nothing broke. Start the test backend if not running, run `npx playwright test`, and fix any failures. This is mandatory — do not skip it.
+
 19. If the story title contains "[FOLLOWUP]":
     - Do NOT create another follow-up story. Ever.
 
